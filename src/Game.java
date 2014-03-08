@@ -13,6 +13,8 @@
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -72,22 +74,22 @@ public class Game extends JPanel implements KeyListener {
 		return true;
 	}
 	/**
-	 * Inicia o jogo apos 2 segundos, atualizando a cada 0,35 segundos, até que
+	 * Inicia o jogo atualizando a cada 0,35 segundos, ate que
 	 * o jogo termine.
+	 *
+	 * Refatorado com ajuda do Astro :)
 	 */
 	public void run() {
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-		}
-		
-		while (!gameOver()) {
-			gameRefresh();
-			try {
-				Thread.sleep(350);
-			} catch (InterruptedException e) {
+		ActionListener gamePerformer = new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				if (gameOver())
+					((Timer) evt.getSource()).stop();
+				else
+					gameRefresh();
 			}
-		}
+		};
+
+		new Timer(350, gamePerformer).start();
 	}
 
 	/**
